@@ -17,7 +17,17 @@
 </head>
 <body>
 <!--  Place cubbles components there. -->
-<react-todo-list cubx-webpackage-id="this"></react-todo-list>
+<react-todo-list cubx-webpackage-id="this">
+    <cubx-core-init style="display:none;">
+        <cubx-core-slot-init slot="items">
+            [
+                {"id":"item_1","value":"Buy milk", "done": false},
+                {"id":"item_2","value":"Call Bob", "done": false},
+                {"id":"item_3","value":"Take care of home plants", "done": true}
+            ]
+        </cubx-core-slot-init>
+    </cubx-core-init>
+</react-todo-list>
 
 </body>
 </html>

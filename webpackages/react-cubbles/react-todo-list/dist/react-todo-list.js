@@ -10,74 +10,105 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 (function () {
   'use strict';
-  /**
-   * Get help:
-   * > Lifecycle callbacks:
-   * https://www.polymer-project.org/1.0/docs/devguide/registering-elements.html#lifecycle-callbacks
-   *
-   * Access the Cubbles-Component-Model:
-   * > Access slot values:
-   * slot 'a': this.getA(); | this.setA(value)
-   */
+
+  // Define your React Components
+
+  var ListItem = function (_React$Component) {
+    _inherits(ListItem, _React$Component);
+
+    function ListItem() {
+      _classCallCheck(this, ListItem);
+
+      return _possibleConstructorReturn(this, (ListItem.__proto__ || Object.getPrototypeOf(ListItem)).apply(this, arguments));
+    }
+
+    _createClass(ListItem, [{
+      key: 'render',
+      value: function render() {
+        var _this2 = this;
+
+        return React.createElement(
+          'li',
+          null,
+          React.createElement('input', { id: this.props.item.id,
+            type: 'checkbox',
+            checked: this.props.item.done,
+            onChange: function onChange(e) {
+              return _this2.props.onClickCallback(_this2.props.index, e);
+            } }),
+          React.createElement(
+            'label',
+            { htmlFor: this.props.item.id },
+            this.props.item.value
+          )
+        );
+      }
+    }]);
+
+    return ListItem;
+  }(React.Component);
+
+  var TodoList = function (_React$Component2) {
+    _inherits(TodoList, _React$Component2);
+
+    function TodoList() {
+      _classCallCheck(this, TodoList);
+
+      return _possibleConstructorReturn(this, (TodoList.__proto__ || Object.getPrototypeOf(TodoList)).apply(this, arguments));
+    }
+
+    _createClass(TodoList, [{
+      key: 'renderList',
+      value: function renderList() {
+        var _this4 = this;
+
+        var listItems = [];
+        this.props.items.forEach(function (item, idx) {
+          listItems.push(React.createElement(ListItem, { key: item.id, item: item, onClickCallback: _this4.props.itemClickCallback, index: idx }));
+        });
+        return React.createElement(
+          'ul',
+          null,
+          listItems
+        );
+      }
+    }, {
+      key: 'render',
+      value: function render() {
+        return React.createElement(
+          'div',
+          null,
+          this.renderList()
+        );
+      }
+    }]);
+
+    return TodoList;
+  }(React.Component);
+
+  // Call CubxPolymer Factory Method for registiering <react-todo-list> Cubbles Component
+
 
   CubxPolymer({
     is: 'react-todo-list',
 
-    /**
-     * Manipulate an element’s local DOM when the element is created and initialized.
-     */
-    ready: function ready() {},
-
-    /**
-     * Manipulate an element’s local DOM when the element is attached to the document.
-     */
-    attached: function attached() {},
-
-    /**
-     * Manipulate an element’s local DOM when the cubbles framework is initialized and ready to work.
-     */
     cubxReady: function cubxReady() {
+      this._cubxReady = true;
       this._render();
     },
 
+    modelItemsChanged: function modelItemsChanged() {
+      this._cubxReady ? this._render() : null;
+    },
+
+    _toggleItemState: function _toggleItemState(index) {
+      var items = this.getItems();
+      items[index].done = !items[index].done;
+      this.setItems(items);
+    },
+
     _render: function _render() {
-      var TodoList = function (_React$Component) {
-        _inherits(TodoList, _React$Component);
-
-        function TodoList() {
-          _classCallCheck(this, TodoList);
-
-          return _possibleConstructorReturn(this, (TodoList.__proto__ || Object.getPrototypeOf(TodoList)).apply(this, arguments));
-        }
-
-        _createClass(TodoList, [{
-          key: 'render',
-          value: function render() {
-            return React.createElement(
-              'div',
-              null,
-              React.createElement(
-                'ul',
-                null,
-                React.createElement(
-                  'li',
-                  null,
-                  'Hallo'
-                ),
-                React.createElement(
-                  'li',
-                  null,
-                  'Welt!'
-                )
-              )
-            );
-          }
-        }]);
-
-        return TodoList;
-      }(React.Component);
-
-      ReactDOM.render(React.createElement(TodoList, null), document.querySelector('[runtime-id="' + this.getRuntimeId() + '"]'));
+      ReactDOM.render(React.createElement(TodoList, { items: this.model.items, itemClickCallback: this._toggleItemState.bind(this) }), document.querySelector('[runtime-id="' + this.getRuntimeId() + '"]'));
     }
   });
 })();

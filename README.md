@@ -1,4 +1,4 @@
-## .
+# React meets Cubbles demo
 
 <hr/>
-Note This page is generated based on the markdown-syntax. For details see <http://daringfireball.net/projects/markdown/syntax/>
+This repository contains some small demo content showing how to build a Cubbles Component using React. For more information about Cubbles see https://cubbles.github.io
